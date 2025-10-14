@@ -75,25 +75,21 @@ $username = $isLoggedIn && isset($_SESSION['username']) ? $_SESSION['username'] 
 <section id="daerah" class="container my-5">
   <h3 class="text-center mb-4">Pilih Provinsi</h3>
 
-  <!-- Search bar utama -->
-  <div class="row justify-content-center mb-4" id="searchSection">
+  <!-- Dropdown Provinsi -->
+  <div class="row justify-content-center mb-4">
     <div class="col-lg-6 col-md-8 col-sm-10 mx-auto">
-      <div class="search-box position-relative d-flex align-items-center">
-        <span class="search-icon">
-          <i class="bi bi-search"></i>
-        </span>
-        <input 
-          type="text" 
-          id="searchProvinsi" 
-          class="form-control search-input shadow-none" 
-          placeholder="Tempat untuk dikunjungi, hal yang dapat dilakukan, hotel..."
+      <div class="d-flex align-items-center shadow-sm p-3 bg-white rounded-pill">
+        <select 
+          id="provinsiSelect" 
+          class="form-select border-0 flex-grow-1 shadow-none"
         >
-        <button id="btnCari" class="btn btn-primary cari-btn">Cari</button>
-        <ul id="suggestions" class="list-group position-absolute w-100 shadow-sm rounded mt-1 suggestion-list"></ul>
+          <option value="">-- Pilih Provinsi --</option>
+        </select>
+        <button id="btnCari" class="btn btn-primary ms-2 rounded-pill px-4">Cari</button>
       </div>
     </div>
   </div>
-
+  <!-- Hasil kartu daerah -->
   <div id="daerahCards" class="row mt-4"></div>
 </section>
 
@@ -550,65 +546,37 @@ const dataDaerah = {
 
 
 
-
-
-
-
-
 };
-
-const provinsiList = Object.keys(dataDaerah);
-
-const searchInput = document.getElementById("searchProvinsi");
-const suggestionBox = document.getElementById("suggestions");
-const container = document.getElementById("daerahCards");
-const btnCari = document.getElementById("btnCari");
-
-function tampilkanSuggestions(query) {
-  suggestionBox.innerHTML = "";
-  container.innerHTML = "";
-
-  if (!query) return;
-
-  const filteredProvinsi = provinsiList.filter(p => 
-    p.toLowerCase().includes(query.toLowerCase())
-  );
-
-  if (filteredProvinsi.length > 0) {
-    filteredProvinsi.forEach(prov => {
-      const li = document.createElement("li");
-      li.className = "list-group-item list-group-item-action";
-      li.textContent = prov;
-      li.addEventListener("click", function() {
-        searchInput.value = prov;
-        suggestionBox.innerHTML = "";
-        tampilkanDaerah(prov);
-      });
-      suggestionBox.appendChild(li);
-    });
-  } else {
-    const li = document.createElement("li");
-    li.className = "list-group-item text-muted text-center";
-    li.textContent = "❌ Tidak ditemukan";
-    suggestionBox.appendChild(li);
+const provinsiSelect = document.getElementById("provinsiSelect");
+  for (let provinsi in dataDaerah) {
+    const option = document.createElement("option");
+    option.value = provinsi;
+    option.textContent = provinsi;
+    provinsiSelect.appendChild(option);
   }
 
-  // Langsung tampilkan card meski baru ketik 1 huruf
-  filteredProvinsi.forEach(p => tampilkanDaerah(p));
-}
-searchInput.addEventListener("input", function() {
-  const query = this.value.trim();
-  tampilkanSuggestions(query);
-});
-// Tombol "Cari" manual
-btnCari.addEventListener("click", function() {
-  tampilkanSuggestions(searchInput.value.trim());
-});
-// Tutup daftar saran saat klik di luar
-document.addEventListener("click", (e) => {
-  if (!e.target.closest(".search-box")) suggestionBox.innerHTML = "";
-});
+  document.getElementById("btnCari").addEventListener("click", function() {
+    const provinsi = provinsiSelect.value;
+    const container = document.getElementById("daerahCards");
+    container.innerHTML = "";
 
+    if (provinsi && dataDaerah[provinsi]) {
+      dataDaerah[provinsi].forEach(daerah => {
+        const card = `
+          <div class="col-md-4 mb-3">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <h5 class="card-title">${daerah.nama}</h5>
+                <p class="card-text">${daerah.deskripsi}</p>
+              </div>
+            </div>
+          </div>`;
+        container.innerHTML += card;
+      });
+    } else {
+      container.innerHTML = `<p class="text-center text-muted">Silakan pilih provinsi terlebih dahulu.</p>`;
+    }
+  });
 
 function tampilkanDaerah(provinsi) {
   container.innerHTML = "";
