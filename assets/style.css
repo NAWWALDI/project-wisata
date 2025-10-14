@@ -1,0 +1,418 @@
+/* 🌕 === BASE STYLE === */
+body {
+  background-color: #ffffff;
+  color: #222;
+  font-family: "Segoe UI", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* 🔝 === TOP BAR === */
+.top-bar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 14px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.top-bar a {
+  text-decoration: none;
+  color: #333;
+  margin: 0 12px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.top-bar a:hover {
+  color: #ff9800;
+  text-decoration: underline;
+}
+
+/* 🏔 === HERO SECTION === */
+.hero {
+  background: url('img/travel/Pemandangan.jpg') no-repeat center center/cover;
+  color: #fff;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-top: 80px;
+  position: relative;
+}
+
+.text-hero h2 {
+  font-size: 36px;
+  font-weight: bold;
+  margin-top: 20px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.text-hero p {
+  font-size: 16px;
+  max-width: 720px;
+  margin: auto;
+  line-height: 1.7;
+  color: #f5f5f5;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* 🔍 === SEARCH BOX === */
+.search-box {
+  background: #f8f9fa;
+  border-radius: 50px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 5px 5px 5px 15px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 1050;
+  transition: all 0.3s ease-in-out;
+}
+
+.search-icon {
+  font-size: 18px;
+  color: #333;
+  margin-right: 8px;
+}
+
+.search-input {
+  border: none;
+  background: transparent;
+  flex: 1;
+  font-size: 15px;
+  outline: none;
+  padding: 10px 0;
+}
+
+.search-input:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.cari-btn {
+  background-color: #0d6efd;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.cari-btn:hover {
+  background-color: #0b5ed7;
+}
+
+/* 🔽 Dropdown suggestions */
+.suggestion-list {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  right: 0;
+  z-index: 2001;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  max-height: 240px;
+  overflow-y: auto;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.suggestion-list .list-group-item {
+  border: none;
+  border-bottom: 1px solid #f1f1f1;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.suggestion-list .list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(-5px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+/* 🔲 === CARD SECTION === */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 50px 40px;
+}
+
+.card {
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  background: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.card h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  padding: 12px;
+  margin: 0;
+  color: #111;
+}
+
+.card p {
+  font-size: 0.95rem;
+  color: #555;
+  padding: 0 12px 14px;
+  margin: 0;
+}
+
+.card .label {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #ff9800;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* 🔻 === FILTER SECTION === */
+.filter-section {
+  padding: 30px 20px 20px;
+  text-align: center;
+  color: #333;
+}
+
+.filter-section .form-select {
+  min-width: 200px;
+  background: #fff;
+  color: #222;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.filter-section .form-select:focus {
+  border-color: #ff9800;
+  outline: none;
+  box-shadow: 0 0 6px rgba(255, 152, 0, 0.3);
+}
+
+/* 🦶 === FOOTER === */
+footer {
+  background: #f8f8f8;
+  color: #555;
+  padding: 20px;
+  text-align: center;
+  margin-top: 50px;
+  border-top: 1px solid #e0e0e0;
+  font-size: 14px;
+}
+
+/* 📱 === RESPONSIVE === */
+@media (max-width: 991px) {
+  .cards {
+    grid-template-columns: 1fr 1fr;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .top-bar {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+  }
+  .cards {
+    grid-template-columns: 1fr;
+    padding: 15px;
+  }
+  .filter-section {
+    padding: 25px 5px 10px;
+  }
+}
+
+/* 🟦 === SIDEBAR === */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -240px;
+  width: 240px;
+  height: 100vh;
+  background: #fff;
+  border-right: 1px solid #e0e0e0;
+  padding-top: 70px;
+  transition: all 0.3s ease;
+  z-index: 1200;
+  overflow-y: auto;
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+.sidebar a {
+  display: block;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: background 0.3s, color 0.3s;
+}
+
+.sidebar a:hover {
+  background: #579aed;
+  color: #fff;
+}
+
+.sidebar .bottom {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.content {
+  margin-left: 0;
+  transition: margin-left 0.3s;
+}
+
+.content.shift {
+  margin-left: 240px;
+}
+
+/* 🎛️ === TOGGLE BUTTON === */
+.toggle-btn {
+  position: fixed;
+  top: 10px;
+  left: 18px;
+  z-index: 1300;
+  background: #fff;
+  border: 1px solid #ddd;
+  color: #333;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease-in-out;
+}
+
+.toggle-btn:hover {
+  background: #0d6efd;
+  color: #fff;
+  border-color: #0d6efd;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+}
+
+.sidebar.active + .toggle-btn {
+  background: #0d6efd;
+  color: #fff;
+}
+
+/* ✨ === HIGHLIGHT CARDS === */
+.highlight-card {
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.highlight-card img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.highlight-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 💡 === FUN FACTS === */
+.fact-card {
+  background: #fff;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.fact-card h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.fact-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 🎠 === SLIDESHOW SECTION === */
+.slideshow-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 50px;
+}
+
+.carousel {
+  width: 450px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.carousel img {
+  height: 250px;
+  object-fit: cover;
+}
+
+.desc-box {
+  width: 380px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.desc-box h4 {
+  color: #0d6efd;
+  font-weight: 700;
+}
+
+.desc-box p {
+  color: #212529;
+  margin-bottom: 1rem;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(1);
+}
