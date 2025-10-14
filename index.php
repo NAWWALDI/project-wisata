@@ -73,25 +73,28 @@ $username = $isLoggedIn && isset($_SESSION['username']) ? $_SESSION['username'] 
 </section>
 
 <section id="daerah" class="container my-5">
-  <h3 class="text-center mb-4">Pilih Provinsi</h3>
+  <h3 class="text-center mb-4 fw-bold">Pilih Provinsi</h3>
 
   <!-- Dropdown Provinsi -->
   <div class="row justify-content-center mb-4">
     <div class="col-lg-6 col-md-8 col-sm-10 mx-auto">
-      <div class="d-flex align-items-center shadow-sm p-3 bg-white rounded-pill">
+      <div class="dropdown-wrapper d-flex align-items-center shadow-sm p-2 bg-white rounded-pill">
+        <span class="ps-3 pe-2 text-secondary">
+          <i class="bi bi-geo-alt-fill"></i>
+        </span>
         <select 
           id="provinsiSelect" 
-          class="form-select border-0 flex-grow-1 shadow-none"
+          class="form-select border-0 flex-grow-1 shadow-none custom-select"
         >
           <option value="">-- Pilih Provinsi --</option>
         </select>
-        <button id="btnCari" class="btn btn-primary ms-2 rounded-pill px-4">Cari</button>
       </div>
     </div>
   </div>
-  <!-- Hasil kartu daerah -->
+
   <div id="daerahCards" class="row mt-4"></div>
 </section>
+
 
 
 <section class="container mt-5">
@@ -547,101 +550,83 @@ const dataDaerah = {
 
 
 };
+// Isi dropdown provinsi secara dinamis
 const provinsiSelect = document.getElementById("provinsiSelect");
-  for (let provinsi in dataDaerah) {
-    const option = document.createElement("option");
-    option.value = provinsi;
-    option.textContent = provinsi;
-    provinsiSelect.appendChild(option);
-  }
+for (let provinsi in dataDaerah) {
+  const option = document.createElement("option");
+  option.value = provinsi;
+  option.textContent = provinsi;
+  provinsiSelect.appendChild(option);
+}
 
-  document.getElementById("btnCari").addEventListener("click", function() {
-    const provinsi = provinsiSelect.value;
-    const container = document.getElementById("daerahCards");
-    container.innerHTML = "";
-
-    if (provinsi && dataDaerah[provinsi]) {
-      dataDaerah[provinsi].forEach(daerah => {
-        const card = `
-          <div class="col-md-4 mb-3">
-            <div class="card shadow-sm h-100">
-              <div class="card-body">
-                <h5 class="card-title">${daerah.nama}</h5>
-                <p class="card-text">${daerah.deskripsi}</p>
-              </div>
-            </div>
-          </div>`;
-        container.innerHTML += card;
-      });
-    } else {
-      container.innerHTML = `<p class="text-center text-muted">Silakan pilih provinsi terlebih dahulu.</p>`;
-    }
-  });
-
+// Fungsi untuk menampilkan card daerah
 function tampilkanDaerah(provinsi) {
+  const container = document.getElementById("daerahCards");
   container.innerHTML = "";
+
   if (provinsi && dataDaerah[provinsi]) {
     dataDaerah[provinsi].forEach(daerah => {
       const imgName = daerah.nama.replace(/\s+/g, '%20');
       container.innerHTML += `
         <div class="col-md-4 mb-3">
           <div class="card shadow-sm h-100">
-            <img src="assets/img/daerah/${imgName}.jpg" class="card-img-top" alt="${daerah.nama}" style="height:200px;object-fit:cover;">
+            <img src="assets/img/daerah/${imgName}.jpg"
+                 class="card-img-top"
+                 alt="${daerah.nama}"
+                 style="height:200px;object-fit:cover;">
             <div class="card-body">
               <h5 class="card-title text-center">${daerah.nama}</h5>
-              <p class="card-text text-muted" style="font-size: 0.9rem;">${daerah.deskripsi}</p>
+              <p class="card-text text-muted" style="font-size: 0.9rem;">
+                ${daerah.deskripsi}
+              </p>
               <div class="text-center">
-                <a href="wisata.php?daerah=${daerah.nama}" class="btn btn-primary btn-sm">Lihat Wisata</a>
+                <a href="wisata.php?daerah=${daerah.nama}" 
+                   class="btn btn-primary btn-sm">
+                   Lihat Wisata
+                </a>
               </div>
             </div>
           </div>
         </div>
       `;
     });
+  } else {
+    container.innerHTML = `
+      <p class="text-center text-muted">
+        Silakan pilih provinsi terlebih dahulu.
+      </p>`;
   }
 }
 
+// Simpan pilihan provinsi ke localStorage saat berubah
+provinsiSelect.addEventListener("change", function () {
+  const provinsi = this.value;
+  localStorage.setItem("selectedProvinsi", provinsi);
+  tampilkanDaerah(provinsi);
+});
 
+// Saat halaman dimuat, tampilkan provinsi terakhir & scroll otomatis
+document.addEventListener("DOMContentLoaded", function () {
+  const savedProvinsi = localStorage.getItem("selectedProvinsi");
+  if (savedProvinsi) {
+    provinsiSelect.value = savedProvinsi;
+    tampilkanDaerah(savedProvinsi);
+
+    // Scroll halus ke bagian card setelah elemen dimuat
+    setTimeout(() => {
+      const section = document.getElementById("daerah");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 300);
+  }
+});
+
+// Sidebar toggle (jika digunakan)
 function toggleSidebar() {
   document.getElementById("sidebar").classList.toggle("active");
   document.getElementById("content").classList.toggle("shift");
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    if (window.location.hash === "#daerah") {
-        const provinsiSelect = document.getElementById("provinsiSelect");
-        if (provinsiSelect) {
-            provinsiSelect.focus();   // fokus ke dropdown
-            provinsiSelect.click();   // buka dropdown (di Chrome/Edge biasanya kebuka)
-        }
-    }
-});
-
-document.getElementById("provinsiSelect").addEventListener("change", function() {
-  let provinsi = this.value;
-  let container = document.getElementById("daerahCards");
-  container.innerHTML = "";
-
-  if (provinsi && dataDaerah[provinsi]) {
-    dataDaerah[provinsi].forEach(daerah => {  
-      let imgName = daerah.nama.replace(/\s+/g, '%20');
-      container.innerHTML += `
-        <div class="col-md-4 mb-3">
-          <div class="card shadow-sm h-100">
-            <img src="assets/img/daerah/${imgName}.jpg" class="card-img-top" alt="${daerah.nama}" style="height:200px;object-fit:cover;">
-            <div class="card-body">
-              <h5 class="card-title text-center">${daerah.nama}</h5>
-              <p class="card-text text-muted" style="font-size: 0.9rem;">${daerah.deskripsi}</p>
-              <div class="text-center">
-                <a href="wisata.php?daerah=${daerah.nama}" class="btn btn-primary btn-sm">Lihat Wisata</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    });
-  }
-});
 </script>
 </body>
 </html>
