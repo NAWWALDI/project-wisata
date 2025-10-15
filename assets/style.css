@@ -474,3 +474,97 @@ footer {
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
 }
+/* 🔹 Tata letak utama */
+#map-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+/* 🔹 Peta di sisi kiri */
+.map-wrapper {
+  flex: 1 1 50%;
+  height: 500px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* 🔹 Panel provinsi di sisi kanan */
+.map-details {
+  flex: 1 1 50%;
+  height: 500px;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 🔹 Isi panel */
+.map-details h4 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.list-group-item {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.8rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.list-group-item:hover {
+  transform: scale(1.02);
+}
+
+.list-group-item h6 {
+  margin: 0 0 0.3rem;
+  font-weight: 600;
+  color: #34495e;
+}
+
+.list-group-item p {
+  margin: 0 0 0.6rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* 🔹 Tombol kecil */
+.btn-sm {
+  font-size: 0.85rem;
+}
+
+/* 🔹 Scrollbar rapi */
+.map-details::-webkit-scrollbar {
+  width: 8px;
+}
+.map-details::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+.map-details::-webkit-scrollbar-thumb:hover {
+  background-color: #999;
+}
+
+/* 🔹 Responsif (HP: map di atas, provinsi di bawah) */
+@media (max-width: 768px) {
+  #map-grid {
+    flex-direction: column;
+  }
+  .map-wrapper,
+  .map-details {
+    flex: 1 1 100%;
+    width: 100%;
+    height: 400px;
+  }
+}

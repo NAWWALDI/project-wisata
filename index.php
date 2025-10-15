@@ -94,47 +94,23 @@ $username = $isLoggedIn && isset($_SESSION['username']) ? $_SESSION['username'] 
 
   <div id="daerahCards" class="row mt-4"></div>
 </section>
+<!-- 1️⃣ Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
+<section id="map-grid" class="map-grid-section container my-4">
+  <!-- Peta -->
+  <div class="map-wrapper">
+    <div id="map"></div>
+  </div>
 
-
-<section class="container mt-5">
-  <h3 class="text-center mb-4 ">Wisata Populer</h3>
-
-  <div class="slideshow-container d-flex justify-content-center align-items-center gap-4 flex-wrap">
-    <!-- Slideshow kiri -->
-    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3500" data-bs-touch="true">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="assets/img/daerah/Labuan%20Bajo.jpg" class="d-block w-100" alt="Labuan Bajo">
-        </div>
-        <div class="carousel-item">
-          <img src="assets/img/daerah/Denpasar.jpg" class="d-block w-100" alt="Bali">
-        </div>
-        <div class="carousel-item">
-          <img src="assets/img/daerah/Sumba%20Barat.jpg" class="d-block w-100" alt="Sumba Barat">
-        </div>
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
-        <span class="visually-hidden">Sebelumnya</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-        <span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
-        <span class="visually-hidden">Berikutnya</span>
-      </button>
-    </div>
-
-    <!-- Deskripsi kanan -->
-    <div class="desc-box" id="descBox">
-      <h4 id="judulDestinasi">Labuan Bajo</h4>
-      <p id="deskripsiDestinasi">
-        Gerbang menuju Taman Nasional Komodo dan keindahan laut Flores yang menakjubkan.
-      </p>
-      <a id="linkDestinasi" href="#" class="btn btn-primary btn-sm">Lihat Wisata</a>
-    </div>
+  <!-- Panel detail (desktop) -->
+  <div id="mapDetails" class="map-details">
+    <p>Pilih salah satu provinsi di peta untuk melihat daftar daerah.</p>
   </div>
 </section>
 
+<!-- 2️⃣ Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <!-- Fun Facts -->
 <section id="funfacts" class="bg-light py-5">
   <div class="container">
@@ -222,17 +198,129 @@ const dataDaerah = {
     { nama: "Denpasar", deskripsi: "Pusat aktivitas ekonomi dan budaya Bali." }
   ],
   "Jawa Timur": [
-    { nama: "Surabaya", deskripsi: "Kota Pahlawan dan pusat ekonomi Jawa Timur." },
-    { nama: "Malang", deskripsi: "Kota sejuk dengan wisata alam dan kuliner." },
-    { nama: "Kediri", deskripsi: "Kota tahu dan Gunung Kelud." },
-    { nama: "Banyuwangi", deskripsi: "Gerbang ke Kawah Ijen dan wisata pantai." },
-    { nama: "Jember", deskripsi: "Terkenal dengan Jember Fashion Carnaval." },
-    { nama: "Madiun", deskripsi: "Kota pecel dengan sejarah panjang." },
-    { nama: "Blitar", deskripsi: "Kota makam Bung Karno dan candi-candi bersejarah." },
-    { nama: "Probolinggo", deskripsi: "Gerbang menuju Gunung Bromo." },
-    { nama: "Pasuruan", deskripsi: "Kota santri dan pusat pertanian." },
-    { nama: "Batu", deskripsi: "Kota wisata pegunungan dengan banyak theme park." }
-  ],
+  { nama: "Pacitan", deskripsi: "Kota kelahiran Presiden SBY, terkenal dengan gua-gua karst dan pantai selatan yang menawan." },
+  { nama: "Ponorogo", deskripsi: "Kota Reog, pusat kesenian tradisional dengan budaya kuat dan sejarah panjang." },
+  { nama: "Trenggalek", deskripsi: "Wilayah pegunungan dan pesisir selatan dengan potensi wisata alam dan pantai." },
+  { nama: "Tulungagung", deskripsi: "Daerah penghasil marmer dan batu alam terbesar di Jawa Timur." },
+  { nama: "Blitar", deskripsi: "Kota bersejarah tempat makam Bung Karno dan simbol perjuangan kemerdekaan." },
+  { nama: "Kediri", deskripsi: "Kota tua dengan sejarah Kerajaan Kediri dan industri rokok besar seperti Gudang Garam." },
+  { nama: "Malang", deskripsi: "Kota wisata pegunungan yang sejuk dengan destinasi seperti Batu dan Bromo." },
+  { nama: "Lumajang", deskripsi: "Wilayah di lereng Semeru, terkenal dengan Ranu Kumbolo dan air terjun Tumpak Sewu." },
+  { nama: "Jember", deskripsi: "Kota karnaval busana internasional Jember Fashion Carnaval dan penghasil tembakau." },
+  { nama: "Banyuwangi", deskripsi: "Kabupaten ujung timur Jawa dengan wisata Ijen Blue Fire dan pantai surfing kelas dunia." },
+  { nama: "Bondowoso", deskripsi: "Wilayah pegunungan dingin dengan kawah Ijen dan perkebunan kopi." },
+  { nama: "Situbondo", deskripsi: "Kota pesisir utara dengan Taman Nasional Baluran yang dijuluki Afrika-nya Jawa." },
+  { nama: "Probolinggo", deskripsi: "Gerbang utama menuju Gunung Bromo dengan pelabuhan dan hasil perikanan melimpah." },
+  { nama: "Pasuruan", deskripsi: "Kota industri dan pertanian di kaki Gunung Arjuno, terkenal dengan kebun apel." },
+  { nama: "Sidoarjo", deskripsi: "Kota industri dan penghasil bandeng serta udang, dikenal juga karena lumpur Lapindo." },
+  { nama: "Mojokerto", deskripsi: "Wilayah bersejarah peninggalan Kerajaan Majapahit di Trowulan." },
+  { nama: "Jombang", deskripsi: "Dikenal sebagai Kota Santri, banyak pondok pesantren besar di sini." },
+  { nama: "Nganjuk", deskripsi: "Kota Angin dengan sektor pertanian dan perkebunan yang maju." },
+  { nama: "Madiun", deskripsi: "Kota pendekar dengan kuliner khas nasi pecel Madiun dan budaya bela diri." },
+  { nama: "Magetan", deskripsi: "Wilayah pegunungan di kaki Gunung Lawu, terkenal dengan Telaga Sarangan." },
+  { nama: "Ngawi", deskripsi: "Daerah agraris di perbatasan Jawa Tengah, terkenal dengan Benteng Van den Bosch." },
+  { nama: "Bojonegoro", deskripsi: "Kawasan penghasil minyak dan gas bumi dengan potensi pertanian besar." },
+  { nama: "Tuban", deskripsi: "Kota wali di pesisir utara dengan makam Sunan Bonang dan industri semen." },
+  { nama: "Lamongan", deskripsi: "Kota pesisir dengan kuliner legendaris seperti soto Lamongan dan wisata Bahari Lamongan." },
+  { nama: "Gresik", deskripsi: "Kota industri besar dan tempat makam Sunan Giri serta Maulana Malik Ibrahim." },
+  { nama: "Bangkalan", deskripsi: "Gerbang utama Pulau Madura melalui Jembatan Suramadu." },
+  { nama: "Sampang", deskripsi: "Wilayah pesisir di Madura dengan hasil garam dan budaya lokal yang kuat." },
+  { nama: "Pamekasan", deskripsi: "Kabupaten di tengah Madura, pusat pemerintahan dan kebudayaan." },
+  { nama: "Sumenep", deskripsi: "Kota tua di ujung timur Madura dengan istana keraton dan wisata pulau-pulau kecil." },
+  { nama: "Kota Kediri", deskripsi: "Kota modern dengan warisan sejarah kerajaan dan ekonomi yang terus berkembang." },
+  { nama: "Kota Blitar", deskripsi: "Kota kecil yang sarat sejarah, dekat dengan makam Bung Karno." },
+  { nama: "Kota Malang", deskripsi: "Kota pelajar dan wisata dengan suasana dingin dan banyak kafe estetik." },
+  { nama: "Kota Probolinggo", deskripsi: "Kota pelabuhan pesisir utara, dekat dengan akses wisata Bromo." },
+  { nama: "Kota Pasuruan", deskripsi: "Kota industri dan perdagangan di jalur utama pantura Jawa Timur." },
+  { nama: "Kota Mojokerto", deskripsi: "Kota peninggalan Majapahit dengan banyak situs bersejarah." },
+  { nama: "Kota Madiun", deskripsi: "Kota modern yang tetap menjaga budaya pencak silat dan kuliner tradisional." },
+  { nama: "Kota Surabaya", deskripsi: "Ibu kota provinsi dan kota pahlawan, pusat ekonomi dan industri terbesar di Jawa Timur." },
+  { nama: "Kota Batu", deskripsi: "Kota wisata pegunungan dengan taman rekreasi dan udara sejuk sepanjang tahun." }
+],
+  "Jawa Tengah": [
+  { nama: "Kabupaten Cilacap", deskripsi: "Kabupaten terluas di Jawa Tengah dengan Pelabuhan Tanjung Intan dan PLTU besar." },
+  { nama: "Kabupaten Banyumas", deskripsi: "Wilayah yang dikenal dengan logat ngapak dan wisata Baturaden yang sejuk." },
+  { nama: "Kabupaten Purbalingga", deskripsi: "Kota kecil penghasil rambut palsu dan gerbang menuju wisata pegunungan." },
+  { nama: "Kabupaten Banjarnegara", deskripsi: "Dikenal dengan Dieng Plateau dan hasil pertanian seperti kentang dan sayur-mayur." },
+  { nama: "Kabupaten Kebumen", deskripsi: "Kota pesisir selatan dengan bentang alam karst dan Pantai Suwuk yang indah." },
+  { nama: "Kabupaten Purworejo", deskripsi: "Wilayah tenang di selatan Jawa Tengah dengan potensi wisata alam dan budaya." },
+  { nama: "Kabupaten Wonosobo", deskripsi: "Terkenal dengan dataran tinggi Dieng dan udara dinginnya." },
+  { nama: "Kabupaten Magelang", deskripsi: "Rumah bagi Candi Borobudur, situs warisan dunia UNESCO." },
+  { nama: "Kabupaten Boyolali", deskripsi: "Sentra peternakan sapi perah dan dikenal sebagai daerah penghasil susu." },
+  { nama: "Kabupaten Klaten", deskripsi: "Wilayah agraris di antara Solo dan Yogyakarta, terkenal dengan Candi Prambanan." },
+  { nama: "Kabupaten Sukoharjo", deskripsi: "Wilayah industri dan pertanian yang berdekatan dengan Kota Solo." },
+  { nama: "Kabupaten Wonogiri", deskripsi: "Kota gaplek yang punya Waduk Gajah Mungkur sebagai ikon." },
+  { nama: "Kabupaten Karanganyar", deskripsi: "Kawasan wisata pegunungan seperti Tawangmangu dan Candi Sukuh." },
+  { nama: "Kabupaten Sragen", deskripsi: "Dikenal dengan Museum Sangiran, situs manusia purba dunia." },
+  { nama: "Kabupaten Grobogan", deskripsi: "Wilayah luas dengan sejarah panjang dan potensi pertanian besar." },
+  { nama: "Kabupaten Blora", deskripsi: "Kota kelahiran Pramoedya Ananta Toer, terkenal dengan hutan jatinya." },
+  { nama: "Kabupaten Rembang", deskripsi: "Kota pesisir utara dengan tradisi nelayan dan tokoh RA Kartini." },
+  { nama: "Kabupaten Pati", deskripsi: "Kota santri dengan industri makanan dan hasil pertanian unggul." },
+  { nama: "Kabupaten Kudus", deskripsi: "Kota kretek dengan sejarah Islam dan arsitektur khas Kudus Kulon." },
+  { nama: "Kabupaten Jepara", deskripsi: "Kota ukir dengan pantai-pantai indah dan sejarah RA Kartini." },
+  { nama: "Kabupaten Demak", deskripsi: "Kerajaan Islam pertama di Jawa, dengan Masjid Agung Demak sebagai simbolnya." },
+  { nama: "Kabupaten Semarang", deskripsi: "Wilayah pegunungan dan pertanian yang mengelilingi ibu kota provinsi." },
+  { nama: "Kabupaten Temanggung", deskripsi: "Daerah penghasil tembakau dan kopi dengan latar Gunung Sumbing." },
+  { nama: "Kabupaten Kendal", deskripsi: "Pintu gerbang barat Kota Semarang, berkembang pesat di sektor industri." },
+  { nama: "Kabupaten Batang", deskripsi: "Daerah pesisir utara dengan potensi wisata alam dan industri." },
+  { nama: "Kabupaten Pekalongan", deskripsi: "Kota batik pesisir dengan perpaduan budaya Jawa dan Arab." },
+  { nama: "Kabupaten Pemalang", deskripsi: "Wilayah agraris dengan julukan Kota Ikhlas dan logat ngapak khas." },
+  { nama: "Kabupaten Tegal", deskripsi: "Kota bahari dengan warung tegal (warteg) yang mendunia." },
+  { nama: "Kabupaten Brebes", deskripsi: "Kota penghasil bawang merah dan telur asin yang terkenal di Indonesia." },
+  { nama: "Kota Magelang", deskripsi: "Kota kecil yang asri di kaki Gunung Sumbing, dekat dengan Borobudur." },
+  { nama: "Kota Surakarta", deskripsi: "Kota budaya Jawa klasik dengan Keraton Kasunanan dan tradisi batik." },
+  { nama: "Kota Salatiga", deskripsi: "Kota pendidikan yang sejuk dan multikultural di lereng Gunung Merbabu." },
+  { nama: "Kota Semarang", deskripsi: "Ibu kota Jawa Tengah, kota pelabuhan dengan ikon Lawang Sewu." },
+  { nama: "Kota Pekalongan", deskripsi: "Kota batik pesisir dengan pengakuan UNESCO sebagai kota kreatif." },
+  { nama: "Kota Tegal", deskripsi: "Kota pelabuhan dengan logat khas ngapak dan kuliner legendaris seperti sate blengong." }
+],
+  "Jawa Barat": [
+  { nama: "Kabupaten Bogor", deskripsi: "Wilayah penyangga ibu kota dengan destinasi wisata seperti Puncak dan Kebun Raya Bogor." },
+  { nama: "Kabupaten Sukabumi", deskripsi: "Dikenal dengan keindahan alamnya seperti Pelabuhan Ratu dan Geopark Ciletuh." },
+  { nama: "Kabupaten Cianjur", deskripsi: "Sentra pertanian dan penghasil beras, terkenal dengan manisan Cianjur." },
+  { nama: "Kabupaten Bandung", deskripsi: "Wilayah pegunungan dengan budaya Sunda yang kental dan wisata alam yang indah." },
+  { nama: "Kabupaten Garut", deskripsi: "Kota dodol yang punya pesona wisata alam seperti Situ Bagendit dan Gunung Papandayan." },
+  { nama: "Kabupaten Tasikmalaya", deskripsi: "Kota santri dengan kerajinan batik khas dan panorama pegunungan." },
+  { nama: "Kabupaten Ciamis", deskripsi: "Wilayah di selatan Jawa Barat dengan sejarah Galuh dan wisata alamnya." },
+  { nama: "Kabupaten Kuningan", deskripsi: "Terletak di kaki Gunung Ciremai, terkenal dengan sumber air panas dan udara sejuk." },
+  { nama: "Kabupaten Cirebon", deskripsi: "Kota pesisir bersejarah dengan warisan Kesultanan Cirebon dan kuliner empal gentong." },
+  { nama: "Kabupaten Majalengka", deskripsi: "Dikenal sebagai kota angin dan kini berkembang pesat dengan Bandara Kertajati." },
+  { nama: "Kabupaten Sumedang", deskripsi: "Terkenal dengan tahu Sumedang dan potensi pendidikan dari Universitas Padjadjaran." },
+  { nama: "Kabupaten Indramayu", deskripsi: "Pusat industri migas dan daerah pesisir dengan tradisi nelayan kuat." },
+  { nama: "Kabupaten Subang", deskripsi: "Wilayah perkebunan nanas dan pintu gerbang menuju wisata Gunung Tangkuban Perahu." },
+  { nama: "Kabupaten Purwakarta", deskripsi: "Kota yang menggabungkan nuansa modern dan tradisi Sunda, dengan Waduk Jatiluhur sebagai ikon." },
+  { nama: "Kabupaten Karawang", deskripsi: "Kota industri besar dengan sejarah perjuangan di masa kemerdekaan." },
+  { nama: "Kabupaten Bekasi", deskripsi: "Wilayah padat penduduk dengan pertumbuhan ekonomi pesat di sekitar Jabodetabek." },
+  { nama: "Kabupaten Bandung Barat", deskripsi: "Dikenal dengan wisata alam Lembang dan panorama pegunungan yang indah." },
+  { nama: "Kabupaten Pangandaran", deskripsi: "Kawasan wisata pantai unggulan di selatan Jawa Barat dengan keindahan alam laut dan gua." },
+  { nama: "Kota Bogor", deskripsi: "Kota hujan yang kaya sejarah dan pusat penelitian pertanian Indonesia." },
+  { nama: "Kota Sukabumi", deskripsi: "Kota kecil nan sejuk dengan akses ke wisata alam dan pantai selatan Jawa." },
+  { nama: "Kota Bandung", deskripsi: "Ibu kota provinsi yang menjadi pusat pendidikan, kreatif, dan kuliner." },
+  { nama: "Kota Cirebon", deskripsi: "Kota pelabuhan bersejarah dengan perpaduan budaya Jawa, Sunda, dan Tionghoa." },
+  { nama: "Kota Bekasi", deskripsi: "Kota penyangga Jakarta dengan populasi tinggi dan pertumbuhan ekonomi cepat." },
+  { nama: "Kota Depok", deskripsi: "Kota pendidikan dan hunian yang berkembang pesat di antara Jakarta dan Bogor." },
+  { nama: "Kota Cimahi", deskripsi: "Kota militer dengan perkembangan industri dan teknologi yang pesat." },
+  { nama: "Kota Tasikmalaya", deskripsi: "Dikenal dengan julukan Kota Santri dan kerajinan tangan khasnya." },
+  { nama: "Kota Banjar", deskripsi: "Kota kecil di perbatasan Jabar-Jateng dengan suasana tenang dan asri." }
+],
+  "DKI Jakarta": [
+  { nama: "Kepulauan Seribu", deskripsi: "Gugusan pulau wisata di utara Jakarta, terkenal dengan pantai, snorkeling, dan ekowisatanya." },
+  { nama: "Kota Jakarta Pusat", deskripsi: "Pusat pemerintahan dan bisnis, terdapat Monas, Istana Negara, dan kawasan Thamrin-Sudirman." },
+  { nama: "Kota Jakarta Utara", deskripsi: "Wilayah pelabuhan dan industri, dengan Pelabuhan Tanjung Priok dan kawasan Ancol." },
+  { nama: "Kota Jakarta Barat", deskripsi: "Daerah padat dengan warisan sejarah seperti Kota Tua dan Glodok." },
+  { nama: "Kota Jakarta Selatan", deskripsi: "Kawasan modern dan elit, pusat perkantoran, kuliner, dan gaya hidup urban." },
+  { nama: "Kota Jakarta Timur", deskripsi: "Wilayah dengan kawasan industri dan permukiman terbesar di Jakarta." }
+],
+  "Banten": [
+  { nama: "Pandeglang", deskripsi: "Kabupaten dengan potensi wisata alam dan pantai, termasuk Taman Nasional Ujung Kulon, habitat badak Jawa." },
+  { nama: "Lebak", deskripsi: "Wilayah pegunungan dan hutan dengan budaya Baduy yang masih lestari." },
+  { nama: "Tangerang", deskripsi: "Kabupaten industri dan urban, bagian dari kawasan megapolitan Jabodetabek." },
+  { nama: "Serang", deskripsi: "Kabupaten dengan sejarah Kesultanan Banten dan situs bersejarah di pesisir barat Jawa." },
+  { nama: "Kota Tangerang", deskripsi: "Kota modern dengan bandara internasional Soekarno–Hatta dan kawasan industri besar." },
+  { nama: "Kota Cilegon", deskripsi: "Kota industri baja terbesar di Indonesia, dekat Pelabuhan Merak." },
+  { nama: "Kota Serang", deskripsi: "Ibukota Provinsi Banten, pusat pemerintahan dan pendidikan." },
+  { nama: "Kota Tangerang Selatan", deskripsi: "Kota penyangga Jakarta dengan kawasan perumahan elit, kampus, dan bisnis modern." }
+],
   "Sulawesi Utara" : [ 
     { nama: "Manado", deskripsi: "Ibukota provinsi, terkenal dengan Bunaken dan kuliner rica-rica." },
     { nama: "Bitung", deskripsi: "Kota pelabuhan dengan Taman Laut Lembeh." },
@@ -545,6 +633,61 @@ const dataDaerah = {
   { nama: "Kota Samarinda", deskripsi: "Ibukota provinsi dan pusat ekonomi di tepi Sungai Mahakam." },
   { nama: "Kota Bontang", deskripsi: "Kota industri dan energi, terkenal dengan pabrik pupuk dan gas alam." }
 ],
+  "Kalimantan Barat": [
+  { nama: "Sambas", deskripsi: "Kabupaten perbatasan dengan Malaysia, terkenal dengan budaya Melayu dan wisata pantainya." },
+  { nama: "Mempawah", deskripsi: "Daerah pesisir yang menjadi jalur utama perdagangan dan pintu gerbang ke Pontianak." },
+  { nama: "Sanggau", deskripsi: "Wilayah tengah Kalbar dengan perkebunan kelapa sawit dan karet yang luas." },
+  { nama: "Ketapang", deskripsi: "Kabupaten terbesar di Kalbar, kaya sumber daya alam dan potensi wisata bahari." },
+  { nama: "Sintang", deskripsi: "Wilayah pedalaman di tepi Sungai Kapuas dengan hutan tropis yang lebat." },
+  { nama: "Kapuas Hulu", deskripsi: "Kabupaten konservasi dengan Danau Sentarum dan Taman Nasional Betung Kerihun." },
+  { nama: "Bengkayang", deskripsi: "Daerah perbukitan dan perbatasan, kaya budaya Dayak dan pemandangan alam." },
+  { nama: "Landak", deskripsi: "Wilayah pedalaman dengan hasil pertanian dan tradisi Dayak yang kuat." },
+  { nama: "Sekadau", deskripsi: "Kabupaten agraris di jalur Sungai Kapuas, dengan potensi perkebunan dan perikanan." },
+  { nama: "Melawi", deskripsi: "Daerah hulu sungai dengan potensi hasil hutan dan pertanian." },
+  { nama: "Kayong Utara", deskripsi: "Kabupaten pesisir dengan destinasi utama Taman Nasional Gunung Palung." },
+  { nama: "Kubu Raya", deskripsi: "Wilayah penyangga Pontianak yang berkembang pesat di bidang industri dan pertanian." },
+  { nama: "Kota Pontianak", deskripsi: "Ibukota provinsi di garis khatulistiwa, pusat ekonomi dan pemerintahan Kalbar." },
+  { nama: "Kota Singkawang", deskripsi: "Kota seribu kelenteng, simbol keharmonisan budaya Tionghoa, Dayak, dan Melayu." }
+],
+  "Kalimantan Tengah": [
+  { nama: "Kotawaringin Barat", deskripsi: "Wilayah barat Kalimantan Tengah dengan pelabuhan Kumai dan Taman Nasional Tanjung Puting, habitat orangutan." },
+  { nama: "Kotawaringin Timur", deskripsi: "Pusat industri dan perdagangan di Sampit, terkenal dengan Sungai Mentaya." },
+  { nama: "Kapuas", deskripsi: "Kabupaten dengan sungai terpanjang di Indonesia, Sungai Kapuas." },
+  { nama: "Barito Selatan", deskripsi: "Daerah penghasil batu bara dan kayu, berpusat di Buntok." },
+  { nama: "Barito Utara", deskripsi: "Wilayah kaya hasil hutan dan tambang, berpusat di Muara Teweh." },
+  { nama: "Katingan", deskripsi: "Kabupaten berhutan lebat dengan kawasan konservasi Sebangau." },
+  { nama: "Seruyan", deskripsi: "Wilayah agraris di pesisir selatan dengan potensi perikanan dan sawit." },
+  { nama: "Sukamara", deskripsi: "Kabupaten kecil di barat daya, berkembang di sektor peternakan dan pertanian." },
+  { nama: "Lamandau", deskripsi: "Daerah perbukitan dengan konservasi satwa liar dan potensi wisata alam." },
+  { nama: "Gunung Mas", deskripsi: "Wilayah pegunungan di tengah provinsi, kaya sumber daya tambang dan hutan." },
+  { nama: "Pulang Pisau", deskripsi: "Kabupaten di tepi Sungai Kahayan, dengan potensi pertanian dan perikanan." },
+  { nama: "Murung Raya", deskripsi: "Wilayah hulu dengan bentang alam pegunungan dan sumber tambang mineral." },
+  { nama: "Barito Timur", deskripsi: "Kabupaten hasil pemekaran dengan sektor utama pertambangan dan perkebunan." },
+  { nama: "Kota Palangkaraya", deskripsi: "Ibukota provinsi yang direncanakan sebagai pusat pemerintahan masa depan Indonesia." }
+],
+  "Kalimantan Selatan": [
+  { nama: "Tanah Laut", deskripsi: "Kabupaten dengan potensi perikanan dan wisata bahari, terkenal dengan Pantai Takisung dan Pantai Batakan." },
+  { nama: "Kotabaru", deskripsi: "Wilayah kepulauan dan pesisir dengan Gunung Sebatung dan Pulau Laut yang indah." },
+  { nama: "Banjar", deskripsi: "Dikenal dengan wisata religi seperti Makam Datu Kelampayan dan kuliner khas Banjar." },
+  { nama: "Barito Kuala", deskripsi: "Daerah agraris di muara Sungai Barito, dengan potensi pertanian dan perikanan." },
+  { nama: "Tapin", deskripsi: "Kabupaten dengan sumber daya tambang batu bara dan hasil perkebunan karet." },
+  { nama: "Hulu Sungai Selatan", deskripsi: "Pusat budaya Banjar, terkenal dengan Danau Bangkau dan pasar terapung." },
+  { nama: "Hulu Sungai Tengah", deskripsi: "Wilayah pegunungan Meratus dengan keindahan alam dan air terjun alami." },
+  { nama: "Hulu Sungai Utara", deskripsi: "Kawasan rawa dan sungai, dengan pusatnya di Amuntai, kota itik Alabio." },
+  { nama: "Tabalong", deskripsi: "Kabupaten di utara Kalsel dengan industri batubara dan perkebunan yang berkembang." },
+  { nama: "Tanah Bumbu", deskripsi: "Daerah pesisir dengan pelabuhan dan sektor pertambangan yang maju." },
+  { nama: "Balangan", deskripsi: "Wilayah perbukitan Meratus dengan potensi tambang, perkebunan, dan wisata alam." },
+  { nama: "Kota Banjarmasin", deskripsi: "Ibukota provinsi yang dikenal sebagai 'Kota Seribu Sungai' dan pusat ekonomi Kalsel." },
+  { nama: "Kota Banjarbaru", deskripsi: "Kota modern dan pusat pendidikan serta pemerintahan baru di Kalimantan Selatan." }
+],
+  "Kalimantan Utara": [
+  { nama: "Bulungan", deskripsi: "Kabupaten dengan sejarah Kesultanan Bulungan, pusat pemerintahan di Tanjung Selor." },
+  { nama: "Malinau", deskripsi: "Wilayah berhutan lebat di perbatasan Malaysia, dikenal dengan budaya suku Dayak dan konservasi alamnya." },
+  { nama: "Nunukan", deskripsi: "Kabupaten perbatasan yang menjadi jalur utama ke Sabah, Malaysia." },
+  { nama: "Tana Tidung", deskripsi: "Kabupaten muda dengan potensi perikanan dan hasil hutan yang besar." },
+  { nama: "Kota Tarakan", deskripsi: "Kota industri dan pelabuhan utama Kalimantan Utara, pusat ekonomi dan transportasi wilayah perbatasan." }
+],
+
 
 
 
@@ -627,6 +770,82 @@ function toggleSidebar() {
   document.getElementById("sidebar").classList.toggle("active");
   document.getElementById("content").classList.toggle("shift");
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+const koordinatProvinsi = {
+  "Aceh": { lat: 5.55, lng: 95.32 },
+  "Sumatera Utara": { lat: 3.59, lng: 98.67 },
+  "Sumatera Barat": { lat: -0.95, lng: 100.35 },
+  "Riau": { lat: 0.51, lng: 101.45 },
+  "Kepulauan Riau": { lat: 0.91, lng: 104.45 },
+  "Jambi": { lat: -1.59, lng: 103.61 },
+  "Sumatera Selatan": { lat: -3.32, lng: 104.75 },
+  "Bengkulu": { lat: -3.80, lng: 102.26 },
+  "Lampung": { lat: -5.45, lng: 105.26 },
+  "Kepulauan Bangka Belitung": { lat: -2.13, lng: 106.13 },
+  "Banten": { lat: -6.12, lng: 106.15 },
+  "DKI Jakarta": { lat: -6.2, lng: 106.82 },
+  "Jawa Barat": { lat: -6.91, lng: 107.61 },
+  "Jawa Tengah": { lat: -7.15, lng: 110.14 },
+  "DI Yogyakarta": { lat: -7.78, lng: 110.37 },
+  "Jawa Timur": { lat: -7.54, lng: 112.23 },
+  "Bali": { lat: -8.409, lng: 115.188 },
+  "Nusa Tenggara Barat": { lat: -8.652, lng: 117.361 },
+  "Nusa Tenggara Timur": { lat: -8.657, lng: 121.079 },
+  "Kalimantan Barat": { lat: -0.02, lng: 109.34 },
+  "Kalimantan Tengah": { lat: -1.61, lng: 113.02 },
+  "Kalimantan Selatan": { lat: -3.32, lng: 114.59 },
+  "Kalimantan Timur": { lat: 0.54, lng: 117.14 },
+  "Kalimantan Utara": { lat: 3.0, lng: 116.0 },
+  "Sulawesi Utara": { lat: 1.49, lng: 124.84 },
+  "Sulawesi Tengah": { lat: -1.43, lng: 121.45 },
+  "Sulawesi Barat": { lat: -2.68, lng: 118.89 },
+  "Sulawesi Selatan": { lat: -5.14, lng: 119.43 },
+  "Sulawesi Tenggara": { lat: -4.14, lng: 122.08 },
+  "Maluku": { lat: -3.70, lng: 128.17 },
+  "Maluku Utara": { lat: 1.68, lng: 127.97 },
+  "Papua": { lat: -4.27, lng: 138.08 },
+  "Papua Barat": { lat: -1.34, lng: 131.01 },
+  "Papua Tengah": { lat: -3.99, lng: 137.55 },
+  "Papua Pegunungan": { lat: -4.0, lng: 138.7 },
+  "Papua Selatan": { lat: -6.0, lng: 140.0 },
+  "Papua Barat Daya": { lat: -1.2, lng: 132.5 }
+};
+
+
+  // --- Inisialisasi peta ---
+  const map = L.map("map").setView([-2.5, 118], 5);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 18,
+    attribution: "&copy; OpenStreetMap contributors"
+  }).addTo(map);
+
+  // --- Tambah marker ---
+  for (let provinsi in dataDaerah) {
+    if (koordinatProvinsi[provinsi]) {
+      const { lat, lng } = koordinatProvinsi[provinsi];
+      const marker = L.marker([lat, lng]).addTo(map);
+      marker.bindPopup(`<b>${provinsi}</b><br>Klik untuk lihat daerah.`);
+      marker.on("click", () => {
+        let html = `<h4>${provinsi}</h4><div class="list-group">`;
+        dataDaerah[provinsi].forEach((d) => {
+          html += `
+            <div class="list-group-item">
+              <h6>${d.nama}</h6>
+              <p style="font-size: 0.9rem;">${d.deskripsi}</p>
+              <a href="wisata.php?daerah=${encodeURIComponent(d.nama)}"
+                 class="btn btn-primary btn-sm">Lihat Wisata</a>
+            </div>`;
+        });
+        html += `</div>`;
+        document.getElementById("mapDetails").innerHTML = html;
+      });
+    }
+  }
+});
 </script>
 </body>
 </html>
